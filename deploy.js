@@ -1,6 +1,6 @@
 import HDWalletProvider from '@truffle/hdwallet-provider'
 import Web3 from 'web3'
-import contract from './compile.js'
+import metadata from './compile.js'
 import config from './config.js'
 
 const provider = new HDWalletProvider(config.mnemonic, config.providerApi)
@@ -10,9 +10,9 @@ let deploy = async () => {
   const account = (await web3.eth.getAccounts())[0]
 
   console.log('Deploy from account: ', account)
-  const result = await new web3.eth.Contract(contract.abi)
+  const contract = await new web3.eth.Contract(metadata.abi)
     .deploy({
-      data: contract.evm.bytecode.object,
+      data: metadata.evm.bytecode.object,
       arguments: ['Hello World!'],
     })
     .send({
@@ -20,7 +20,7 @@ let deploy = async () => {
       from: account,
     })
 
-  console.log('Contract address: ', result.options.address)
+  console.log('Contract address: ', contract.options.address)
 
   provider.engine.stop()
 }
